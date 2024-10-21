@@ -1,0 +1,1 @@
+const jwtConfig  = require ('/jwtConfig')
