@@ -2,6 +2,7 @@ const { Router } = require('express');
 const { Message } = require('../../db/models');
 const upload = require('../middlewares/upload');
 const removeImage = require('../utils/removeImage');
+const verifyAccessToken = require('../middlewares/verifyAccessToken');
 const messagesRouter = Router();
 
 messagesRouter
@@ -16,7 +17,21 @@ messagesRouter
         .status(500)
         .json({ text: 'Ошибка получения сообщений', message: error.message });
     }
-  })// verifyRefreshToken
+  })
+  
+   .post(verifyAccessToken, async (req, res) => {
+    try {
+      const { title, body } = req.body;
+      const filename = req.file ? req.file.filename : null;
+      // userId: res.locals.user.id
+      const newMessage = await Message.create({ title, body, img: filename });
+      res.status(201).json(newMessage);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ text: 'Ошибка создания сообщения', message: error.message });
+    }
+  })
+  
   .post(upload.single('img'), async (req, res) => {
     try {
       const { title, body } = req.body;
@@ -29,6 +44,9 @@ messagesRouter
       res.status(500).json({ text: 'Ошибка создания сообщения', message: error.message });
     }
   });
+
+
+  
 
 messagesRouter
   .route('/:messageId')

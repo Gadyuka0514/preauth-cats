@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Box, VStack } from '@chakra-ui/react';
 import MessageCard from '../ui/MessageCard';
 import AddMessageForm from '../ui/AddMessageForm';
+import axiosInstance from '../../axiosInstance';
 
 export default function MessagesPage() {
   const [messages, setMessages] = useState([]);
